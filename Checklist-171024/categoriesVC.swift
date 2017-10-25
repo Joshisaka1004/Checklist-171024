@@ -11,36 +11,27 @@ import UIKit
 class categoriesVC: UITableViewController {
 
     var categories = [CategoriesData]()
-    var d = 7
     override func viewDidLoad() {
         super.viewDidLoad()
+        load()
+        print(getmyPath())
         navigationController?.navigationBar.prefersLargeTitles = true
-        feedMyTable(myParam: nil)
-    }
-    func feedMyTable(myParam: String!) {
-        
-        let category1 = CategoriesData()
-        let item1 = ItemsData()
-        
-        let category2 = CategoriesData()
-        let item2 = ItemsData()
-        
-        categories.removeAll()
-        category1.subItems.removeAll()
-        
-        category1.categoryNames = "Puzzle Families"
-        category2.categoryNames = "Conceptis"
-        
-        if myParam != nil {
-            item1.names = myParam
-        } else {
-            item1.names = "no content yet, fill me :)"
+        if categories.isEmpty {
+            feedMyTable()
         }
+    }
+    
+    func feedMyTable() {
+
+        let category1 = CategoriesData()
+        category1.categoryNames = "Puzzle Families"
+        let category2 = CategoriesData()
+        category2.categoryNames = "Conceptis Tasks"
         
-        category1.subItems.append(item1)
         categories.append(category1)
         categories.append(category2)
     }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categories.count
     }
@@ -53,8 +44,8 @@ class categoriesVC: UITableViewController {
         if segue.identifier == "cellsSegue" {
             let myController = segue.destination as! categoryItemsVC
             if let myIndexPath = tableView.indexPath(for: sender as! UITableViewCell) {
-                myController.categoriesItemsData.removeAll()
-                myController.categoriesItemsData = categories[myIndexPath.row].subItems
+                myController.myItems = categories
+                myController.index = myIndexPath.row
                 myController.delegate = self
             }
         }

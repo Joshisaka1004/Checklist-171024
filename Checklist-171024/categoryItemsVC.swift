@@ -10,30 +10,29 @@ import UIKit
 
 class categoryItemsVC: UITableViewController {
 
-    var categoriesItemsData = [ItemsData]()
+    var myItems = [CategoriesData]()
+    var index: Int!
     var delegate: categoriesVC!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        //load()
+        print(index!)
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if !categoriesItemsData.isEmpty {
-            return categoriesItemsData.count
-        } else {
-            return 0
-        }
+        return myItems[index].subItems.count
         
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let myCell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
-        myCell.textLabel?.text = categoriesItemsData[indexPath.row].names
+        myCell.textLabel?.text = myItems[index].subItems[indexPath.row].names
         return myCell
     }
     @IBAction func done(_ sender: Any) {
-        let myErsatz = "Hakyuu!"
-        categoriesItemsData[0].names = myErsatz
-        delegate.feedMyTable(myParam: "22222222")
+        let text = ItemsData()
+        text.names = "200"
+        myItems[index].subItems.append(text)
         tableView.reloadData()
+        delegate.save()
     }
 }
 
