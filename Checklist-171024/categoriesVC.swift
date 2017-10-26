@@ -13,23 +13,44 @@ class categoriesVC: UITableViewController {
     var categories = [CategoriesData]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        load()
+        load() // Es wird der gespeicherte Array categories geladen
+        if categories.isEmpty { // falls dieser Array jedoch leer ist, dann
+            feedMyTable()   // wird die Funktion feedMyTabel aufgerufen, aber nur dann
+        } // da wir nichts weiter angeben (), wird der leere default-String genutzt
         print(getmyPath())
         navigationController?.navigationBar.prefersLargeTitles = true
+        
+    }
+    
+    func feedMyTable(newCategory: String = "") {
+        
+// Wenn die Funktion von viewDidLoad() gecallt wird, dann ist newCategory leer
+// und es wir in der obersten Tabellenzeile ein Hinweis gezeigt
+        
+        let category1 = CategoriesData()
+        if newCategory == "" {
+            category1.categoryNames = "NOCH KEIN EINTRAG!"
+        } else if newCategory != ""{
+            category1.categoryNames = newCategory
+        }
+        
+        categories.append(category1)
+        if categories.count > 1 && categories[0].categoryNames == "NOCH KEIN EINTRAG!" {
+            categories.remove(at: 0)
+        }
+        navigationController?.popViewController(animated: true)
+        tableView.reloadData()
+        save()
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        let myIndexPath = IndexPath(row: indexPath.row, section: 0)
+        categories.remove(at: indexPath.row)
+        tableView.deleteRows(at: [myIndexPath], with: .automatic)
         if categories.isEmpty {
             feedMyTable()
         }
-    }
-    
-    func feedMyTable() {
-
-        let category1 = CategoriesData()
-        category1.categoryNames = "Puzzle Families"
-        let category2 = CategoriesData()
-        category2.categoryNames = "Conceptis Tasks"
-        
-        categories.append(category1)
-        categories.append(category2)
+        save()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -48,6 +69,14 @@ class categoriesVC: UITableViewController {
                 myController.index = myIndexPath.row
                 myController.delegate = self
             }
+        } else if segue.identifier == "accessorySegue" {
+            let myController = segue.destination as! categoryModifierVC
+            myController.myTitle = "Edit Item"
+            myController.view.backgroundColor = UIColor.green
+        } else if segue.identifier == "addSegue" {
+            let myController = segue.destination as! categoryModifierVC
+            myController.myTitle = "Add Item"
+            myController.delegate = self
         }
     }
     
@@ -65,7 +94,7 @@ class categoriesVC: UITableViewController {
             try myTemp1.write(to: myPath)
         }
         catch {
-            print("Error!")
+            print("Saving Error!")
         }
     }
     func load() {
@@ -76,7 +105,7 @@ class categoriesVC: UITableViewController {
             categories = try myDecoder.decode([CategoriesData].self, from: myData)
         }
         catch {
-            print("Error!")
+            print("Loading Error!")
         }
     }
     override func viewWillAppear(_ animated: Bool) {

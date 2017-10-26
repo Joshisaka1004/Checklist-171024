@@ -11,5 +11,5 @@ import UIKit
 class CategoriesData: NSObject, Codable {
     var categoryNames = ""
     var checkers = false
-    var subItems = [ItemsData]()
+    var items = [ItemsData]()
 }

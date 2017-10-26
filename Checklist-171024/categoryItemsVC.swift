@@ -19,18 +19,18 @@ class categoryItemsVC: UITableViewController {
         print(index!)
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return myItems[index].subItems.count
+        return myItems[index].items.count
         
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let myCell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
-        myCell.textLabel?.text = myItems[index].subItems[indexPath.row].names
+        myCell.textLabel?.text = myItems[index].items[indexPath.row].names
         return myCell
     }
     @IBAction func done(_ sender: Any) {
         let text = ItemsData()
         text.names = "200"
-        myItems[index].subItems.append(text)
+        myItems[index].items.append(text)
         tableView.reloadData()
         delegate.save()
     }

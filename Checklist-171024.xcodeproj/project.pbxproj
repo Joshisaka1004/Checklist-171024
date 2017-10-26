@@ -15,6 +15,7 @@
 		3B3645EB1F9FB02800BD157A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B3645EA1F9FB02800BD157A /* Assets.xcassets */; };
 		3B3645EE1F9FB02800BD157A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B3645EC1F9FB02800BD157A /* LaunchScreen.storyboard */; };
 		3B3645F61F9FB22800BD157A /* categoryItemsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3645F51F9FB22800BD157A /* categoryItemsVC.swift */; };
+		3BB2FB681FA13C070025E3F8 /* categoryModifierVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB2FB671FA13C070025E3F8 /* categoryModifierVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		3B3645ED1F9FB02800BD157A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3B3645EF1F9FB02800BD157A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3B3645F51F9FB22800BD157A /* categoryItemsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = categoryItemsVC.swift; sourceTree = "<group>"; };
+		3BB2FB671FA13C070025E3F8 /* categoryModifierVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = categoryModifierVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 				3B3645E51F9FB02800BD157A /* categoriesVC.swift */,
 				3B3645F51F9FB22800BD157A /* categoryItemsVC.swift */,
 				3B3645E71F9FB02800BD157A /* Main.storyboard */,
+				3BB2FB671FA13C070025E3F8 /* categoryModifierVC.swift */,
 				3B14D2801F9FD87A0053DD2F /* CategoriesData.swift */,
 				3B14D2821F9FD9A70053DD2F /* ItemsData.swift */,
 				3B3645EA1F9FB02800BD157A /* Assets.xcassets */,
@@ -148,6 +151,7 @@
 				3B3645F61F9FB22800BD157A /* categoryItemsVC.swift in Sources */,
 				3B3645E61F9FB02800BD157A /* categoriesVC.swift in Sources */,
 				3B3645E41F9FB02800BD157A /* AppDelegate.swift in Sources */,
+				3BB2FB681FA13C070025E3F8 /* categoryModifierVC.swift in Sources */,
 				3B14D2811F9FD87A0053DD2F /* CategoriesData.swift in Sources */,
 				3B14D2831F9FD9A70053DD2F /* ItemsData.swift in Sources */,
 			);
