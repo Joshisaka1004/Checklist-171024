@@ -8,17 +8,17 @@
 
 import UIKit
 
-class categoriesVC: UITableViewController {
+class categoriesVC: UITableViewController, categoryModifierDelegate, UINavigationControllerDelegate {
 
     var categories = [CategoriesData]()
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.prefersLargeTitles = true
         load() // Es wird der gespeicherte Array categories geladen
         if categories.isEmpty { // falls dieser Array jedoch leer ist, dann
             feedMyTable()   // wird die Funktion feedMyTabel aufgerufen, aber nur dann
         } // da wir nichts weiter angeben (), wird der leere default-String genutzt
         print(getmyPath())
-        navigationController?.navigationBar.prefersLargeTitles = true
         
     }
     
@@ -29,18 +29,27 @@ class categoriesVC: UITableViewController {
         
         let category1 = CategoriesData()
         if newCategory == "" {
-            category1.categoryNames = "NOCH KEIN EINTRAG!"
-        } else if newCategory != ""{
-            category1.categoryNames = newCategory
-        }
+            category1.categoryNames = "NOCH KEINE KATEGORIE!"
+        } 
         
         categories.append(category1)
-        if categories.count > 1 && categories[0].categoryNames == "NOCH KEIN EINTRAG!" {
+        if categories.count > 1 && categories[0].categoryNames == "NOCH KEINE KATEGORIE!" {
             categories.remove(at: 0)
         }
         navigationController?.popViewController(animated: true)
         tableView.reloadData()
-        save()
+        //saver()
+    }
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if viewController === self {
+            UserDefaults.standard.set(-1, forKey: "myIndex")
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        navigationController?.delegate = self
+        
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -50,7 +59,7 @@ class categoriesVC: UITableViewController {
         if categories.isEmpty {
             feedMyTable()
         }
-        save()
+        //saver()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -67,15 +76,24 @@ class categoriesVC: UITableViewController {
             if let myIndexPath = tableView.indexPath(for: sender as! UITableViewCell) {
                 myController.myItems = categories
                 myController.index = myIndexPath.row
+                myController.myTitle = categories[myIndexPath.row].categoryNames
                 myController.delegate = self
             }
         } else if segue.identifier == "accessorySegue" {
             let myController = segue.destination as! categoryModifierVC
-            myController.myTitle = "Edit Item"
-            myController.view.backgroundColor = UIColor.green
+            myController.color = UIColor.green
+            myController.neuerText = "Kategorie bearbeiten!"
+            myController.myTitle = "Bearbeite Kategorie"
+            if let myIndexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+                myController.itemToBeEdited = categories[myIndexPath.row]
+            }
+            
+            myController.delegate = self
         } else if segue.identifier == "addSegue" {
             let myController = segue.destination as! categoryModifierVC
-            myController.myTitle = "Add Item"
+            myController.color = UIColor.yellow
+            myController.neuerText = "Neue Kategorie, bitte!"
+            myController.myTitle = "Neue Kategorie"
             myController.delegate = self
         }
     }
@@ -111,6 +129,21 @@ class categoriesVC: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         //feedMyTable(myParam: nil)
+    }
+    
+    func editCategory(_ controller: categoryModifierVC, editedItem: CategoriesData) {
+        navigationController?.popViewController(animated: true)
+        tableView.reloadData()
+        //saver()
+    }
+    func addCategory(_ controller: categoryModifierVC, addedItem: CategoriesData) {
+        navigationController?.popViewController(animated: true)
+        categories.append(addedItem)
+        if categories[0].categoryNames == "NOCH KEINE KATEGORIE!" {
+            categories.remove(at: 0)
+        }
+        tableView.reloadData()
+        //saver()
     }
 }
 
