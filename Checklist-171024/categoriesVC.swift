@@ -10,16 +10,18 @@ import UIKit
 
 class categoriesVC: UITableViewController, categoryModifierDelegate, UINavigationControllerDelegate {
 
+    var myCounter = -1
     var categories = [CategoriesData]()
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = true
+        myCounter = UserDefaults.standard.object(forKey: "myIndex") as? Int ?? -1
+        print("Hallo", myCounter)
         load() // Es wird der gespeicherte Array categories geladen
         if categories.isEmpty { // falls dieser Array jedoch leer ist, dann
             feedMyTable()   // wird die Funktion feedMyTabel aufgerufen, aber nur dann
         } // da wir nichts weiter angeben (), wird der leere default-String genutzt
         print(getmyPath())
-        
     }
     
     func feedMyTable(newCategory: String = "") {
@@ -43,13 +45,16 @@ class categoriesVC: UITableViewController, categoryModifierDelegate, UINavigatio
     
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         if viewController === self {
-            UserDefaults.standard.set(-1, forKey: "myIndex")
+            myCounter = -1
+            UserDefaults.standard.set(myCounter, forKey: "myIndex")
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         navigationController?.delegate = self
-        
+        if myCounter != -1 {
+            performSegue(withIdentifier: "cellsSegue", sender: myCounter)
+        } 
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -70,15 +75,24 @@ class categoriesVC: UITableViewController, categoryModifierDelegate, UINavigatio
         myCell.textLabel?.text = categories[indexPath.row].categoryNames
         return myCell
     }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let myRow = indexPath.row
+        UserDefaults.standard.set(myRow, forKey: "myIndex")
+        performSegue(withIdentifier: "cellsSegue", sender: myRow)
+        
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "cellsSegue" {
             let myController = segue.destination as! categoryItemsVC
-            if let myIndexPath = tableView.indexPath(for: sender as! UITableViewCell) {
-                myController.myItems = categories
-                myController.index = myIndexPath.row
-                myController.myTitle = categories[myIndexPath.row].categoryNames
-                myController.delegate = self
-            }
+            //if let myIndexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+            let myIndex = sender as! Int
+            myController.myItems = categories
+            myController.index = myIndex
+            myController.myTitle = categories[myIndex].categoryNames
+            myController.delegate = self
+            //UserDefaults.standard.set(myIndex, forKey: "myIndex")
+            //}
         } else if segue.identifier == "accessorySegue" {
             let myController = segue.destination as! categoryModifierVC
             myController.color = UIColor.green
